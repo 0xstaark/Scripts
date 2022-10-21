@@ -4,8 +4,8 @@
 echo "[+] Updateing system..."
 sudo apt-get -y update
 
-#echo "unziping Rockyou.txt..."
-#unzip -d usr/share/wordlists/rockyou.txt.zip
+echo "unziping Rockyou.txt..."
+unzip -d usr/share/wordlists/rockyou.txt.zip
 
 echo "[+] Installing Terminator..."
 sudo apt-get -y install terminator
