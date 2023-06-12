@@ -9,7 +9,7 @@ NC="\e[0m"
 if [[ $1 != '--all' ]]; then
 echo -e ${BLUE}"You need to run this script with sudo"
 echo -e "use the argument --all to run"${NC}
-
+exit
 
 elif [[ $1 == "--all" ]]; then
 
