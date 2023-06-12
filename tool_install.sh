@@ -8,12 +8,12 @@ NC="\e[0m"
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Updateing system"
 echo -e "----------------------------------------------"${NC}
-#sudo apt-get -y update 2>/dev/null
+sudo apt-get -y update 2>/dev/null
 
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Unziping Rockyou.txt"
 echo -e "----------------------------------------------"${NC}
-gunzip /usr/share/wordlists/rockyou.txt.zip 2>/dev/null
+sudo gunzip /usr/share/wordlists/rockyou.txt.zip 2>/dev/null
 
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Installing Terminator"
@@ -37,7 +37,7 @@ sudo wget https://github.com/RustScan/RustScan/releases/download/2.0.1/rustscan_
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Removing Rustscan install file"${NC}
 echo -e "${YELLOW}----------------------------------------------"${NC}
-rm rustscan_2.0.1_amd64.deb
+sudo rm rustscan_2.0.1_amd64.deb
 
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Installing wfuzz"
