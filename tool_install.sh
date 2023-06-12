@@ -3,17 +3,25 @@
 #Colors
 GREEN="\e[32m"
 YELLOW="\e[33m"
+BLUE="\e[34m"
 NC="\e[0m"
+
+if [[ $1 != '--all' ]]; then
+echo -e ${BLUE}"You need to run this script with sudo"
+echo -e "use the argument --all to run"${NC}
+
+
+elif [[ $1 == "--all" ]]; then
 
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Updateing system"
 echo -e "----------------------------------------------"${NC}
-sudo apt-get -y update 2>/dev/null
+#sudo apt-get -y update 2>/dev/null
 
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Unziping Rockyou.txt"
 echo -e "----------------------------------------------"${NC}
-sudo gunzip /usr/share/wordlists/rockyou.txt.zip 2>/dev/null
+gunzip /usr/share/wordlists/rockyou.txt.zip 2>/dev/null
 
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Installing Terminator"
@@ -37,7 +45,7 @@ sudo wget https://github.com/RustScan/RustScan/releases/download/2.0.1/rustscan_
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Removing Rustscan install file"${NC}
 echo -e "${YELLOW}----------------------------------------------"${NC}
-sudo rm rustscan_2.0.1_amd64.deb
+rm rustscan_2.0.1_amd64.deb
 
 echo -e ${YELLOW}"----------------------------------------------"
 echo -e "${GREEN}[+]${NC} ${YELLOW}Installing wfuzz"
@@ -72,3 +80,4 @@ echo -e ${YELLOW}"----------------------------------------------"
 echo "Add this to your .zshrc file"
 echo "Alias cat='batcat'"
 echo "----------------------------------------------"
+fi
