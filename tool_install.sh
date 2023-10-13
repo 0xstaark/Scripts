@@ -330,7 +330,7 @@ fi
 
 #Downloading nc.exe
 if [[ ! -f "nc.exe" ]]; then
-	eprintf "${GREEN}[+]${YELLOW} %-15s %s\n" "Downloading" "nc.exe"
+	printf "${GREEN}[+]${YELLOW} %-15s %s\n" "Downloading" "nc.exe"
 	wget -q https://github.com/int0x33/nc.exe/raw/master/nc.exe
 else
 	printf "${GREEN}[x] %-15s %s\n" "nc.exe" "already exists. Skipping download"
@@ -360,6 +360,21 @@ else
 	printf "${GREEN}[x] %-15s %s\n" "pspy64" "already exists. Skipping download"
 fi
 
+#Downloading Linux Exploit Suggester
+if [[ ! -f "linux-exploit-suggester.sh" ]]; then
+	printf "${GREEN}[+]${YELLOW} %-15s %s\n" "Downloading" "linux-exploit-suggester.sh"
+	wget -q https://github.com/The-Z-Labs/linux-exploit-suggester/raw/master/linux-exploit-suggester.sh
+else
+	printf "${GREEN}[x] %-15s %s\n" "linux-exploit-suggester.sh" "already exists. Skipping download"
+fi
+
+#Downloading Linux PrivChecker
+if [[ ! -f "linuxprivchecker.py" ]]; then
+	printf "${GREEN}[+]${YELLOW} %-15s %s\n" "Downloading" "linuxprivchecker.py"
+	wget -q https://github.com/sleventyeleven/linuxprivchecker/raw/master/linuxprivchecker.py
+else
+	printf "${GREEN}[x] %-15s %s\n" "linuxprivchecker.py" "already exists. Skipping download"
+fi
 
 
 
