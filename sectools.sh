@@ -113,7 +113,7 @@ single_file_check_and_download_file() {
                 printf "${RED}[x] %-15s %s\n" "Failed to download:" "$file1"
             fi
         else 
-            echo -e ${GREEN}"[*] You already have the newest version of:" ${YELLOW}"$local_file"${NC}
+            echo -e ${GREEN}"[*] You already have the newest version of:" ${YELLOW}"$file1"${NC}
         fi
     else
         # If the file doesn't exist, download it
