@@ -1,4 +1,4 @@
-# tool_install.sh
+# sectools.sh
 - Script for installing various tools and scripts for CTF and more.
 
 # sun_tzu.sh
