@@ -46,24 +46,30 @@ check_and_download_file() {
     local api_url="$1"
     local file_url="$2"
     local local_file="$3"
+    local local_file2="${4:-$local_file}"
+
+    #Finding latest release
+    #latest=$(curl -s "$api_url" | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+    #new_url=$(echo "$file_url" | sed "s/\\.\\*/$latest/")
 
     # Get the time from the GitHub API
     github_time=$(curl -s "$api_url" | grep 'updated_at' | head -1 | sed 's/ //g' | awk -F '"' '{print $4}' | sed 's/T02.*//')
 
     # Check if the file exists locally
-    if [[ -f "$local_file" ]]; then
+    if [[ -f "$local_file" || -f $local_file2 ]]; then
         # Get the time from the local file
         local_time=$(stat -c "%y" "$local_file" 2>/dev/null | awk '{print $1}')
 
         # Convert the times to timestamps
         github_timestamp=$(date -d "$github_time" +%s)
         local_timestamp=$(date -d "$local_time" +%s)
-
+	
         # Compare the timestamps to identify the newest file
         if [ "$github_timestamp" -gt "$local_timestamp" ]; then
             # Download the file
-            wget -q "$file_url" -O "$local_file" >/dev/null 2>&1
-            if [[ -f "$local_file" ]]; then
+            rm -r "$local_file" 2>/dev/null
+            wget -q "$file_url" >/dev/null 2>&1
+            if [[ -f "$local_file" || -f "$local_file2" ]]; then
                 printf "${GREEN}[+] %-15s %s\n" "Downloading:" "$local_file"
             else
                 printf "${RED}[x] %-15s %s\n" "Failed to download:" "$local_file"
@@ -73,8 +79,8 @@ check_and_download_file() {
         fi
     else
         # If the file doesn't exist, download it
-        wget -q "$file_url" -O "$local_file" >/dev/null 2>&1
-        if [[ -f "$local_file" ]]; then
+        wget -q "$file_url" >/dev/null 2>&1
+        if [[ -f "$local_file" || -f "$local_file2" ]]; then
             printf "${GREEN}[+] %-15s %s\n" "Downloading:" "$local_file"
         else
             printf "${RED}[x] %-15s %s\n" "Failed to download:" "$local_file"
@@ -296,7 +302,9 @@ sleep 1
 #Downloading mimikatz
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/gentilkiwi/mimikatz/releases/latest"
-file="https://github.com/gentilkiwi/mimikatz/releases/download/.*/mimikatz_trunk.zip"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/gentilkiwi/mimikatz/releases/download/$latest/mimikatz_trunk.zip"
+file2=$(echo $file | awk -F "/" '{print $9}')
 file1="mimikatz.exe"
 check_and_download_file "$api_url" "$file" "$file1"
 
@@ -304,15 +312,17 @@ check_and_download_file "$api_url" "$file" "$file1"
 #Downloading SharpHound.ps1
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/BloodHoundAD/SharpHound/releases/latest"
-file="https://github.com/BloodHoundAD/SharpHound/releases/download/.*/SharpHound-v[0-9]+\.[0-9]+\.[0-9]+\.zip"
+file=$(curl -s $api_url | grep -i 'browser_download_url' | grep -E 'SharpHound-v[0-9]+\.[0-9]+\.[0-9]+\.zip' | awk '{print $2}' | sed 's/"//g')
+file2=$(echo $file | awk -F "/" '{print $9}')
 file1="SharpHound.exe"
-check_and_download_file "$api_url" "$file" "$file1"
+check_and_download_file "$api_url" "$file" "$file1" "$file2"
 
 
 #Downloading winPEASx64.exe
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/carlospolop/PEASS-ng/releases/latest"
-file="https://github.com/carlospolop/PEASS-ng/releases/download/.*/winPEASx64.exe"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/carlospolop/PEASS-ng/releases/download/$latest/winPEASx64.exe"
 file1="winPEASx64.exe"
 check_and_download_file "$api_url" "$file" "$file1"
 
@@ -320,7 +330,8 @@ check_and_download_file "$api_url" "$file" "$file1"
 #Downloading winPEASany.exe
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/carlospolop/PEASS-ng/releases/latest"
-file="https://github.com/carlospolop/PEASS-ng/releases/download/.*/winPEASany.exe"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/carlospolop/PEASS-ng/releases/download/$latest/winPEASany.exe"
 file1="winPEASany.exe"
 check_and_download_file "$api_url" "$file" "$file1"
 
@@ -328,7 +339,8 @@ check_and_download_file "$api_url" "$file" "$file1"
 #Downloading Linpeas.sh
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/carlospolop/PEASS-ng/releases/latest"
-file="https://github.com/carlospolop/PEASS-ng/releases/download/.*/linpeas.sh"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/carlospolop/PEASS-ng/releases/download/$latest/linpeas.sh"
 file1="linpeas.sh"
 check_and_download_file "$api_url" "$file" "$file1"
 
@@ -354,9 +366,18 @@ single_file_check_and_download_file "$download_url" "$file1"
 #Downloading Inveigh.exe
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/Kevin-Robertson/Inveigh/releases/latest"
-file="https://github.com/Kevin-Robertson/Inveigh/releases/download/.*/Inveigh-net3.5-v[0-9]+\.[0-9]+\.[0-9]+\.zip"
+file=$(curl -s $api_url | grep -i 'browser_download_url' | grep -E 'Inveigh-net3.5-v[0-9]+\.[0-9]+\.[0-9]+\.zip' | awk '{print $2}' | sed 's/"//g')
+file2=$(echo $file | awk -F "/" '{print $9}')
 file1="Inveigh.exe"
-check_and_download_file "$api_url" "$file" "$file1"
+check_and_download_file "$api_url" "$file" "$file1" "$file2"
+
+
+#api_url="https://api.github.com/repos/Kevin-Robertson/Inveigh/releases/latest"
+#latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+#file="https://github.com/Kevin-Robertson/Inveigh/releases/download/$latest/Inveigh-net3.5-v[0-9]+\.[0-9]+\.[0-9]+\.zip"
+#file1=$(echo $file | awk -F "/" '{print $9}')
+#ile2="Inveigh.exe"
+#check_and_download_file "$api_url" "$file" "$file1"
 
 
 #Downloading Invegih.ps1
@@ -425,7 +446,8 @@ single_file_check_and_download_file "$download_url" "$file1"
 #Downloadning pspy32
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/DominicBreuker/pspy/releases/latest"
-file="https://github.com/DominicBreuker/pspy/releases/download/.*/pspy32"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/DominicBreuker/pspy/releases/download/$latest/pspy32"
 file1="pspy32"
 check_and_download_file "$api_url" "$file" "$file1"
 
@@ -433,7 +455,8 @@ check_and_download_file "$api_url" "$file" "$file1"
 #Downloading pspy64
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/DominicBreuker/pspy/releases/latest"
-file="https://github.com/DominicBreuker/pspy/releases/download/.*/pspy64"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/DominicBreuker/pspy/releases/download/$latest/pspy64"
 file1="pspy64"
 check_and_download_file "$api_url" "$file" "$file1"
 
@@ -459,7 +482,8 @@ single_file_check_and_download_file "$download_url" "$file1"
 #Downloading Kerbrute
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/ropnop/kerbrute/releases/latest"
-file="https://github.com/ropnop/kerbrute/releases/download/.*/kerbrute_linux_amd64"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/ropnop/kerbrute/releases/download/$latest/kerbrute_linux_amd64"
 file1="kerbrute_linux_amd64"
 check_and_download_file "$api_url" "$file" "$file1"
 
@@ -467,7 +491,8 @@ check_and_download_file "$api_url" "$file" "$file1"
 #Downloading Kerbrute
 # GitHub API URL for the latest release
 api_url="https://api.github.com/repos/ropnop/kerbrute/releases/latest"
-file="https://github.com/ropnop/kerbrute/releases/download/.*/kerbrute_windows_amd64.exe"
+latest=$(curl -s $api_url | grep -i 'browser_download_url' | tail -1 | awk '{print $2}' | awk -F "/" '{print $8}')
+file="https://github.com/ropnop/kerbrute/releases/download/$latest/kerbrute_windows_amd64.exe"
 file1="kerbrute_windows_amd64.exe"
 check_and_download_file "$api_url" "$file" "$file1"
 
