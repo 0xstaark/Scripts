@@ -1,6 +1,6 @@
 # sectools.sh
 - Script for installing various tools and scripts for CTF and more.
-### The following tools and scripts are installed:
+### The following tools and scripts are downloaded:
 * seclists
 * Terminator
 * Batcat
