@@ -1,7 +1,20 @@
 # sectools.sh
 - Script for installing various tools and scripts for CTF and more.
-- This script downolads the following tools:
-
+#The following tools and scripts are installed:
+* seclists
+* Terminator
+* Batcat
+* Rustscan
+* wfuzz
+* ffuf
+* Bloodhound
+* Neo4j
+* GoBuster
+* Feroxbuster
+* Coercer
+* Certipy-ad
+* NetExec
+* pypykatz
 * mimikatz.exe
 * SharpHound.exe
 * winPEASx64.exe
